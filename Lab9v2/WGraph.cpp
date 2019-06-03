@@ -187,7 +187,10 @@ std::string WGraph::minCostTree(char start)
 
 	while (!pq.empty())
 	{
-		//see jims pdf
+		Node* current = nodeList[pq.top().endIndex];
+		pq.pop();
+
+
 	}
 
 	return buff;

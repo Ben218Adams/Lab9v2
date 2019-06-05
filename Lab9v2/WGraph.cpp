@@ -178,21 +178,48 @@ std::string WGraph::minCostTree(char start)
 
 	// walk down its list of edges and add them also
 	Edge* ptr = nodeList[startKey]->connects;	
-
 	while (ptr != nullptr)	// adds all connected edges to pq
 	{
 		pq.push(*ptr);
 		ptr = ptr->next;
 	}
 
-	while (!pq.empty())
+	while (!pq.empty())		//////////////////////////////////////////////////////////////////////HERE I AM
 	{
 		Node* current = nodeList[pq.top().endIndex];
+		int weight = pq.top().weight;
 		pq.pop();
+		current->visited = true;
 
+		buff += weight;			// Outputs current i.e. top().endIndex
+		buff += current->name;
 
+		int currentIndex = findNode(*current);				// Finds index of current 
+		Edge* nextEdge = nodeList[currentIndex]->connects;	// Finds next edges for 
+		while (nextEdge)
+		{
+			if (nodeList[nextEdge->endIndex]->visited = false)	// end of current edge is nonvisited
+			{
+				std::priority_queue <Edge, std::vector<Edge>, edgeComparator > secondQ;
+				secondQ = pq;
+				Edge* anEdge; 
+				while (secondQ.size() != 0)
+				{
+					Edge* oldEdge = secondQ.top();
+					if ((oldEdge->endIndex == currentIndex) && (oldEdge->weight > nextEdge)
+					{
+						// delete old edge and add new edge
+					}
+				}
+				/*if (true)	// if (any edges in pq terminate at end) && if (pq edge longer than ) 
+				{
+					// delete old edge and add new edge
+				}*/
+				//process other end
+			}
+			NextEdge = nextEdge->next;		// This works because of source code edges starting from x linked list
+		}
 	}
-
 	return buff;
 }
 

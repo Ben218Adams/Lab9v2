@@ -173,51 +173,51 @@ std::string WGraph::minCostTree(char start)
 	int startKey = findNode(start);
 	Node * startNode =nodeList[startKey];
 	startNode->visited = true; 
-
-	std::priority_queue <Edge, std::vector<Edge>, edgeComparator > pq;
+	
+	//std::priority_queue <Edge, std::vector<Edge>, edgeComparator > pq;
+	Edge* pq[SIZE];
+	int pqNext = 0;
 
 	// walk down its list of edges and add them also
 	Edge* ptr = nodeList[startKey]->connects;	
 	while (ptr != nullptr)	// adds all connected edges to pq
 	{
-		pq.push(*ptr);
+		pq[pqNext] = ptr;
+		pqNext++;
 		ptr = ptr->next;
 	}
-
-	while (!pq.empty())		//////////////////////////////////////////////////////////////////////HERE I AM
+	// make pq an actual pq?
+	while (pqNext > 0)		//////////////////////////////////////////////////////////////////////HERE I AM
 	{
-		Node* current = nodeList[pq.top().endIndex];
-		int weight = pq.top().weight;
-		pq.pop();
+		Node* current = nodeList[ pq[--pqNext]->endIndex] ;
+		int weight = pq[--pqNext]->weight;
+		
 		current->visited = true;
 
 		buff += weight;			// Outputs current i.e. top().endIndex
 		buff += current->name;
 
-		int currentIndex = findNode(*current);				// Finds index of current 
+		int currentIndex = findNode(current->name);				// Finds index of current 
 		Edge* nextEdge = nodeList[currentIndex]->connects;	// Finds next edges for 
-		while (nextEdge)
+		while (nextEdge != nullptr)
 		{
 			if (nodeList[nextEdge->endIndex]->visited = false)	// end of current edge is nonvisited
 			{
-				std::priority_queue <Edge, std::vector<Edge>, edgeComparator > secondQ;
-				secondQ = pq;
-				Edge* anEdge; 
-				while (secondQ.size() != 0)
+				while (pqNext > 0)
 				{
-					Edge* oldEdge = secondQ.top();
-					if ((oldEdge->endIndex == currentIndex) && (oldEdge->weight > nextEdge)
+					Edge* oldEdge = pq[pqNext];
+					if ((oldEdge->endIndex == currentIndex) && (oldEdge->weight > nextEdge->weight))
 					{
+						nextEdge->endIndex = oldEdge->endIndex;
+						nextEdge->next = oldEdge->next;
+						nextEdge->weight = oldEdge->weight;
+						delete oldEdge;			// what about ptrs to old edge??
+						pqNext--;
 						// delete old edge and add new edge
 					}
 				}
-				/*if (true)	// if (any edges in pq terminate at end) && if (pq edge longer than ) 
-				{
-					// delete old edge and add new edge
-				}*/
-				//process other end
 			}
-			NextEdge = nextEdge->next;		// This works because of source code edges starting from x linked list
+			nextEdge = nextEdge->next;		// This works because of source code edges starting from x linked list
 		}
 	}
 	return buff;
